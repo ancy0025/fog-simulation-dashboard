@@ -19,10 +19,10 @@ nodes = st.slider("Number of Nodes", 2, 20, 5)
 tasks = st.slider("Number of Tasks", 10, 100, 20)
 
 if st.button("▶️ Run Simulation"):
-    os.system(f"python ..fog-simulation-dashboard/yafs_sim/simulation.py --strategy {strategy} --nodes {nodes} --tasks {tasks}")
+    os.system(f"python ../yafs_sim/simulation.py --strategy {strategy} --nodes {nodes} --tasks {tasks}")
     st.success("Simulation Completed!")
 
-    result_path = "..fog-simulation-dashboard/data/results.csv"
+    result_path = "../data/results.csv"
     if os.path.exists(result_path):
         df = pd.read_csv(result_path)
         st.subheader("📊 Comparative Metrics")
