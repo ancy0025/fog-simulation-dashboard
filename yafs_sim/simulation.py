@@ -53,7 +53,7 @@ def run_simulation(strategy="FCFS", num_nodes=5, num_tasks=20):
     pop.set_sink_modules(["SimpleModule"])
 
     # Run simulation
-    sim = Sim(topo, default_results_path="data/")
+    sim = Sim(topo, default_results_path="fog-simulation-dashboard/data/")
     sim.deploy_app(app, placement, pop)
     start = time.time()
     sim.run(100)
@@ -62,9 +62,9 @@ def run_simulation(strategy="FCFS", num_nodes=5, num_tasks=20):
     latency = random.uniform(5.0, 15.0)  # Placeholder
     energy = random.uniform(20.0, 50.0)  # Placeholder
 
-    with open("data/results.csv", "a", newline="") as csvfile:
+    with open("fog-simulation-dashboard/data/results.csv", "a", newline="") as csvfile:
         writer = csv.writer(csvfile)
-        if os.stat("data/results.csv").st_size == 0:
+        if os.stat("fog-simulation-dashboard/data/results.csv").st_size == 0:
             writer.writerow(["Strategy", "Nodes", "Tasks", "Latency", "Energy", "Runtime"])
         writer.writerow([strategy, num_nodes, num_tasks, round(latency, 2), round(energy, 2), round(end - start, 2)])
 
