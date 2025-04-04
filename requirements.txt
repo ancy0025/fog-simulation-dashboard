@@ -1,5 +1,4 @@
-streamlit
-pandas
-matplotlib
-networkx
-yafs
+streamlit==1.44.1
+pandas==2.2.3
+matplotlib==3.10.1
+git+https://github.com/acsicuib/YAFS.git@YAFS3
