@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import os
+from pathlib import Path
+import subprocess
 
 st.title("⚙️ Fog Computing Simulator Dashboard")
 
@@ -19,19 +20,32 @@ nodes = st.slider("Number of Nodes", 2, 20, 5)
 tasks = st.slider("Number of Tasks", 10, 100, 20)
 
 if st.button("▶️ Run Simulation"):
-    os.system(f"python ../yafs_sim/simulation.py --strategy {strategy} --nodes {nodes} --tasks {tasks}")
-    st.success("Simulation Completed!")
-
-    result_path = "../data/results.csv"
-    if os.path.exists(result_path):
-        df = pd.read_csv(result_path)
-        st.subheader("📊 Comparative Metrics")
-
-        st.dataframe(df.sort_values(by="Latency"))
-
-        st.line_chart(df.set_index("Strategy")["Latency"], use_container_width=True)
-        st.line_chart(df.set_index("Strategy")["Energy"], use_container_width=True)
-        st.line_chart(df.set_index("Strategy")["Runtime"], use_container_width=True)
-    else:
-        st.warning("No results file found. Please check simulation output.")
-
+    try:
+        # Get absolute paths
+        base_dir = Path(__file__).parent.parent
+        sim_script = base_dir / "yafs_sim" / "simulation.py"
+        
+        # Run simulation
+        cmd = f"python {sim_script} --strategy {strategy} --nodes {nodes} --tasks {tasks}"
+        result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
+        
+        st.success("✅ Simulation Completed!")
+        
+        # Show results
+        result_path = base_dir / "data" / "results.csv"
+        if result_path.exists():
+            df = pd.read_csv(result_path)
+            st.subheader("📊 Comparative Metrics")
+            
+            st.dataframe(df.sort_values(by="Latency"))
+            
+            fig, ax = plt.subplots()
+            df.plot(x="Strategy", y=["Latency", "Energy"], ax=ax, kind="line")
+            st.pyplot(fig)
+        else:
+            st.warning("No results file found.")
+            
+    except subprocess.CalledProcessError as e:
+        st.error(f"❌ Simulation failed: {e.stderr}")
+    except Exception as e:
+        st.error(f"⚠️ Unexpected error: {str(e)}")
