@@ -1,12 +1,20 @@
-def run_simulation(strategy="FCFS", num_nodes=5, num_tasks=20):
-    from yafs.core import Sim
-    from yafs.population import Population
-    from yafs.topology import Topology
-    from yafs.placement import Placement
-    from yafs.application import Application
-    import random, csv, os, time
+from pathlib import Path
+from yafs.core import Sim
+from yafs.population import Population
+from yafs.topology import Topology
+from yafs.placement import Placement
+from yafs.application import Application
+import random
+import csv
+import os
+import time
 
+def run_simulation(strategy="FCFS", num_nodes=5, num_tasks=20):
     print(f"Running simulation with strategy: {strategy}, nodes: {num_nodes}, tasks: {num_tasks}")
+
+    # Create data directory if missing
+    results_dir = Path(__file__).parent.parent / "data"
+    results_dir.mkdir(parents=True, exist_ok=True)
 
     # Setup basic topology
     topo = Topology()
@@ -22,7 +30,7 @@ def run_simulation(strategy="FCFS", num_nodes=5, num_tasks=20):
     app.set_message("M1", "SimpleModule", "SimpleModule", instructions=100, bytes=100)
     app.add_source_messages("M1")
 
-    # Placement strategy switch
+    # Placement strategy
     placement = Placement(name="placement")
     if strategy == "FCFS":
         placement.set_module_placement("SimpleModule", [0])
@@ -53,23 +61,24 @@ def run_simulation(strategy="FCFS", num_nodes=5, num_tasks=20):
     pop.set_sink_modules(["SimpleModule"])
 
     # Run simulation
-    sim = Sim(topo, default_results_path="data/")
+    sim = Sim(topo, default_results_path=str(results_dir))
     sim.deploy_app(app, placement, pop)
     start = time.time()
     sim.run(100)
     end = time.time()
 
-    latency = random.uniform(5.0, 15.0)  # Placeholder
-    energy = random.uniform(20.0, 50.0)  # Placeholder
-
-    with open("data/results.csv", "a", newline="") as csvfile:
+    # Write results (placeholder metrics)
+    latency = random.uniform(5.0, 15.0)
+    energy = random.uniform(20.0, 50.0)
+    
+    csv_path = results_dir / "results.csv"
+    with open(csv_path, "a", newline="") as csvfile:
         writer = csv.writer(csvfile)
-        if os.stat("data/results.csv").st_size == 0:
+        if os.stat(csv_path).st_size == 0:
             writer.writerow(["Strategy", "Nodes", "Tasks", "Latency", "Energy", "Runtime"])
         writer.writerow([strategy, num_nodes, num_tasks, round(latency, 2), round(energy, 2), round(end - start, 2)])
 
     print("Simulation finished.")
-
 
 if __name__ == '__main__':
     import argparse
@@ -78,6 +87,4 @@ if __name__ == '__main__':
     parser.add_argument("--nodes", type=int, default=5)
     parser.add_argument("--tasks", type=int, default=20)
     args = parser.parse_args()
-
     run_simulation(args.strategy, args.nodes, args.tasks)
-
