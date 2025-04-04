@@ -64,7 +64,7 @@ def run_simulation(strategy="FCFS", num_nodes=5, num_tasks=20):
 
     with open("data/results.csv", "a", newline="") as csvfile:
         writer = csv.writer(csvfile)
-        if os.stat("fog-simulation-dashboard/data/results.csv").st_size == 0:
+        if os.stat("data/results.csv").st_size == 0:
             writer.writerow(["Strategy", "Nodes", "Tasks", "Latency", "Energy", "Runtime"])
         writer.writerow([strategy, num_nodes, num_tasks, round(latency, 2), round(energy, 2), round(end - start, 2)])
 
