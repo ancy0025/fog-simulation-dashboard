@@ -1,11 +1,12 @@
 from yafs.core import Sim
 from yafs.topology import Topology
 from yafs.application import Application
-from yafs.distribution import deterministic_distribution  # Changed to lowercase
+from yafs.distribution import deterministic_distribution
 import json
 
 def run_simulation(placement_strategy, output_file="data/results.csv"):
     t = Topology()
+    print("Debug: Topology.G =", t.G)  # Add this to log the state of G
     t.add_node(0, {"RAM": 4000, "CPU": 1000})
     t.add_node(1, {"RAM": 1000, "CPU": 200})
     t.add_edge(0, 1, {"BW": 100, "PR": 10})
@@ -15,7 +16,7 @@ def run_simulation(placement_strategy, output_file="data/results.csv"):
     app.add_service_module("Source", 100, 10)
     app.add_service_module("Sink", 50, 5)
 
-    dist = deterministic_distribution(name="Deterministic", time=100)  # Updated
+    dist = deterministic_distribution(name="Deterministic", time=100)
 
     s = Sim(t, default_results_path=output_file)
     s.deploy_app(app, placement=placement_strategy, distribution=dist)
