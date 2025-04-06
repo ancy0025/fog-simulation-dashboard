@@ -2,3 +2,4 @@ git+https://github.com/acsicuib/YAFS.git@master
 streamlit
 pandas
 matplotlib
+numpy
