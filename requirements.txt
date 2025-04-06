@@ -1,4 +1,4 @@
-git+https://github.com/acsicuib/YAFS.git@YAFS3
+git+https://github.com/ancy0025/YAFS.git@YAFS3
 streamlit
 pandas
 matplotlib
