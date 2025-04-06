@@ -6,10 +6,9 @@ import json
 
 def run_simulation(placement_strategy, output_file="data/results.csv"):
     t = Topology()
-    print("Debug: Topology.G =", t.G)  # Add this to log the state of G
-    t.add_node(0, {"RAM": 4000, "CPU": 1000})
-    t.add_node(1, {"RAM": 1000, "CPU": 200})
-    t.add_edge(0, 1, {"BW": 100, "PR": 10})
+    t.add_node(id=0, RAM=4000, CPU=1000)  # Use keyword arguments
+    t.add_node(id=1, RAM=1000, CPU=200)
+    t.add_edge(0, 1, BW=100, PR=10)
 
     app = Application(name="SimpleApp")
     app.set_modules([{"Source": {"Type": "Sensor"}}, {"Sink": {"Type": "Actuator"}}])
