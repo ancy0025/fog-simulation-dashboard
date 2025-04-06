@@ -1,21 +1,16 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 import streamlit as st
-import yafs
-
-st.write("YAFS Path:", yafs.__file__)
-st.write("YAFS Modules:", dir(yafs))
-
 from yafs_sim.simulation import run_simulation
-from yafs_sim.placement_strategies import RoundRobinPlacement, AOAPlacement
+from yafs_sim.placement_strategies import RoundRobinPlacement, AOAPlacement  # Adjust as needed
+from streamlit_app.utils import load_results  # Import the function
 
 st.title("Fog Simulation Dashboard")
 
-# Sidebar: Select algorithms
-algos = {"Round Robin": RoundRobinPlacement, "AOA": AOAPlacement}
-selected_algos = st.sidebar.multiselect("Select Algorithms", list(algos.keys()))
+algos = {
+    "Round Robin": RoundRobinPlacement,
+    "AOA": AOAPlacement  # Add your algorithms here
+}
+
+selected_algos = st.multiselect("Select Algorithms", list(algos.keys()))
 
 # Run simulations
 if st.button("Run Simulations"):
@@ -25,9 +20,8 @@ if st.button("Run Simulations"):
 
 # Load and display results
 results = {algo: load_results(f"data/results_{algo}.csv") for algo in selected_algos}
-metric = st.selectbox("Select Metric", ["energy", "latency", "success_rate"])
+metric = st.selectbox("Select Metric", ["energy", "latency", "success_rate"])  # Adjust metrics as needed
 
-# Visualizations
+# Visualizations (add your plotting code here)
 if results:
-    plot_line(results, metric)
-    plot_radar(results)
+    st.write("Results loaded:", results)
