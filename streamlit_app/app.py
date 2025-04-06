@@ -1,8 +1,12 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import streamlit as st
-from plots import plot_line, plot_radar
-from utils import load_results
 from yafs_sim.simulation import run_simulation
 from yafs_sim.placement_strategies import RoundRobinPlacement, AOAPlacement
+from streamlit_app.plots import plot_line, plot_radar
+from streamlit_app.utils import load_results
 
 st.title("Fog Simulation Dashboard")
 
